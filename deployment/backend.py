@@ -2,8 +2,6 @@ from PyPDF2 import PdfReader
 from openai import OpenAI
 from elasticsearch import Elasticsearch
 import os
-from langchain_community.document_loaders import PyPDFLoader
-from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_groq import ChatGroq
@@ -15,6 +13,7 @@ from langchain.embeddings import OpenAIEmbeddings
 from typing_extensions import List, TypedDict
 from langchain_core.documents import Document
 from langgraph.graph import START, StateGraph
+
 
 """
 retrival -> rank
@@ -54,28 +53,12 @@ def create_vector_store(chunks):
         embedding=embeddings  # Use the initialized embeddings model
     )
     return vector_store
-def load_split_pdf(file_path):
-    # Load the PDF document and split it into chunks
-    loader = PyPDFLoader(file_path)  # Initialize the PDF loader with the file path
-    documents = loader.load()  # Load the PDF document
+def ReadPdf(resume_file):
+    pdf_reader = PdfReader(resume_file)
 
-    # Initialize the recursive character text splitter
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=100,  # Set the maximum chunk size
-        chunk_overlap=20,  # Set the number of overlapping characters between chunks
-        separators=["\n\n", "\n", " ", ""],  # Define resume-specific separators for splitting
-    )
-
-    # Split the loaded documents into chunks
-    chunks = text_splitter.split_documents(documents)
-    return documents, chunks
-def ReadPdf(file_path):
-    reader = PdfReader(file_path)
-    # print(len(reader.pages))
     text = ""
-    for page in reader.pages:
+    for page in pdf_reader.pages:
         text += page.extract_text()
-
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
     openai_client = OpenAI(api_key=OPENAI_API_KEY)
 
@@ -125,9 +108,9 @@ def GetTheJobs(location,query):
     return texts
 
 # Press the green button in the gutter to run the script.
-def backendcalculations(resume_clean, location, query, st):
+def backendcalculations(resume_file, location, query, st):
+    resume_clean = ReadPdf(resume_file)
     texts = GetTheJobs(location,query)
-
 
     llm = ChatOpenAI(model="gpt-4o")
     embeddings = OpenAIEmbeddings()
