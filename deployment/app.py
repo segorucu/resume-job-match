@@ -1,6 +1,6 @@
 import streamlit as st
 import os
-from backend import backendcalculations, load_split_pdf
+from backend import backendcalculations, load_split_pdf, ReadPdf
 import shutil
 
 def main():
@@ -14,7 +14,6 @@ def main():
     st.header("Upload Resume")  # Header for the upload section
 
     resume_file = st.file_uploader("Upload Resume (PDF)", type="pdf")
-    print(resume_file)
 
     location = st.selectbox(
         "Please select city.",
@@ -45,11 +44,12 @@ def main():
 
         st.success(f"File '{resume_file.name}' saved successfully.")
         resume_file_path = os.path.join("temp", resume_file.name)
-        resume_docs, resume_chunks = load_split_pdf(resume_file_path)
-        shutil.rmtree(temp_dir)
+        resume_clean = ReadPdf(resume_file_path)
+        if temp_dir:
+            shutil.rmtree(temp_dir)
 
         if st.button("Analyze Resume", help="Click to analyze the resume"):
-            backendcalculations(resume_docs, resume_chunks, location, query, st)
+            backendcalculations(resume_clean, location, query, st)
     else:
         st.warning("Please upload a resume.")
 
