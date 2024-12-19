@@ -6,9 +6,15 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
-from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 from langchain_core.prompts import PromptTemplate
+from langchain_openai import ChatOpenAI
+from langchain_chroma import Chroma
+from langchain import hub
+from langchain.embeddings import OpenAIEmbeddings
+from typing_extensions import List, TypedDict
+from langchain_core.documents import Document
+from langgraph.graph import START, StateGraph
 
 """
 retrival -> rank
@@ -113,69 +119,45 @@ def GetTheJobs(location,query):
     )
 
     jobs = get_matching_jobs("brave_project", location, query, es_client)
-    return jobs
+    texts = [
+        f"job id: {i} Company name: {job['_source']['companyName']} Title: {job['_source']['title']} description: {job['_source']['description']}"
+        for i, job in enumerate(jobs)]
+    return texts
 
 # Press the green button in the gutter to run the script.
-def backendcalculations(resume_docs, resume_chunks, location, query, st):
-    # file_path = (
-    #     "../Resume_11_2024.pdf"
-    # )
-    # location = "Toronto"
-    # query = "Machine Learning Engineer"
+def backendcalculations(resume_clean, location, query, st):
+    texts = GetTheJobs(location,query)
 
 
+    llm = ChatOpenAI(model="gpt-4o")
+    embeddings = OpenAIEmbeddings()
+    vector_store = Chroma.from_texts(texts, embeddings)
+    prompt = hub.pull("rlm/rag-prompt")
 
-    # resume_clean = ReadPdf(file_path)
-    jobs = GetTheJobs(location,query)
+    # Define state for application
+    class State(TypedDict):
+        question: str
+        context: List[Document]
+        answer: str
 
-    # resume_docs, resume_chunks = load_split_pdf(file_path)
-    full_resume = " ".join([doc.page_content for doc in resume_docs])
+    # Define application steps
+    def retrieve(state: State):
+        retrieved_docs = vector_store.similarity_search(state["question"])
+        return {"context": retrieved_docs}
 
-    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-    openai_client = OpenAI(api_key=OPENAI_API_KEY)
+    def generate(state: State):
+        docs_content = "\n\n".join(doc.page_content for doc in state["context"])
+        messages = prompt.invoke({"question": state["question"], "context": docs_content})
+        response = llm.invoke(messages)
+        return {"answer": response.content}
 
-    prompt = f"""Summarize the following resume.
-        {full_resume}
-    """
+    graph_builder = StateGraph(State).add_sequence([retrieve, generate])
+    graph_builder.add_edge(START, "retrieve")
+    graph = graph_builder.compile()
 
-    chat_response = openai_client.chat.completions.create(
-        model="gpt-4o",  # Specify the GPT-4 model
-        messages=[
-            {
-                "role": "user",
-                "content": prompt
-            }
-        ],
-    )
+    question = f"Given the following resume: {resume_clean} and list of jobs {texts}, analyze which jobs match the resume better. Return the ids, company names, job titles and summaries of the 3 best matching jobs."
 
-    resume_summary = chat_response.choices[0].message.content
+    response = graph.invoke({"question": question})
 
-    vector_store = create_vector_store(resume_chunks)
-
-    ranking = []
-    for i, job in enumerate(jobs):
-        content = analyze_resume(resume_summary, job["_source"]["summary"])
-        for j in range(min(3, len(content))):
-            if not content[j].isdigit():
-                break
-        else:
-            j = 3
-        if j == 0:
-            continue
-        rate = int(content[0:j])
-        ranking.append((rate, i))
-    ranking.sort(reverse=True)
-    # st.write("The results are sent to your e-mail.")
-
-    txt = ""
-    for i in range(min(3, len(ranking))):
-        match, jid = ranking[i]
-        curr = f"Recommendation {i + 1}:\n\n"
-        curr += f"Match rate: {match}%\n\n"
-        curr += f"Job title: {jobs[jid]['_source']['title']}\n\n"
-        curr += f"Company: {jobs[jid]['_source']['companyName']}\n\n"
-        curr += f"Summary: {jobs[jid]['_source']['summary']}\n\n"
-        txt += curr + "\n"
-
-    st.write(txt)
+    st.write(response["answer"])
 
