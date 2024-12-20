@@ -13,9 +13,6 @@ def main():
     st.header("Upload Resume")  # Header for the upload section
 
     resume_file = st.file_uploader("Upload Resume (PDF)", type="pdf")
-    # if resume_file is not None:
-    #     resume_file = resume_file.read()
-    #     print(resume_file)
 
     location = st.selectbox(
         "Please select city.",
