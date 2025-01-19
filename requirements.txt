@@ -1,0 +1,12 @@
+streamlit
+PyPDF2
+openai
+os
+langchain_openai
+langchain_chroma
+langchain
+typing_extensions
+langchain_core
+langgraph
+uuid
+opensearchpy

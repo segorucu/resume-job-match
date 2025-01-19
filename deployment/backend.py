@@ -1,6 +1,5 @@
 from PyPDF2 import PdfReader
 from openai import OpenAI
-from elasticsearch import Elasticsearch
 import os
 from langchain_openai import ChatOpenAI
 from langchain_chroma import Chroma
@@ -10,7 +9,7 @@ from typing_extensions import List, TypedDict
 from langchain_core.documents import Document
 from langgraph.graph import START, StateGraph
 from uuid import uuid4
-from opensearchpy import OpenSearch, exceptions
+from opensearchpy import OpenSearch
 
 """
 retrival -> rank
