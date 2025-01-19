@@ -10,6 +10,7 @@ from typing_extensions import List, TypedDict
 from langchain_core.documents import Document
 from langgraph.graph import START, StateGraph
 from uuid import uuid4
+from opensearchpy import OpenSearch, exceptions
 
 """
 retrival -> rank
@@ -61,13 +62,27 @@ def get_matching_jobs(index_name, location, position, es_client):
 
 
 def getthejobs(location, query):
-    es_client = Elasticsearch(
-        ['https://localhost:9200'],
-        basic_auth=('elastic', 'elastic'),
-        verify_certs=False
+    # es_client = Elasticsearch(
+    #     ['https://localhost:9200'],
+    #     basic_auth=('elastic', 'elastic'),
+    #     verify_certs=False
+    # )
+
+    host = os.getenv("AWS_DOMAIN")
+    port = 443
+    auth = (os.getenv("AWS_USER"), os.getenv("AWS_PASSWORD"))
+
+    aws_client = OpenSearch(
+        hosts=[{'host': host, 'port': port}],
+        http_compress=True,  # enables gzip compression for request bodies
+        http_auth=auth,
+        use_ssl=True,
+        ssl_assert_hostname=False,
+        ssl_show_warn=False,
+        timeout=60
     )
 
-    jobs = get_matching_jobs("brave_project", location, query, es_client)
+    jobs = get_matching_jobs("emre_brave_project", location, query, aws_client)
     Documents = []
     for i, job in enumerate(jobs):
         print(job["_source"]["query"],job['_source']['title'],job['_source']['companyName'])
