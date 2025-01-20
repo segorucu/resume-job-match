@@ -81,6 +81,8 @@ def getthejobs(location, query):
         timeout=60
     )
 
+
+
     jobs = get_matching_jobs("emre_brave_project", location, query, aws_client)
     Documents = []
     for i, job in enumerate(jobs):
