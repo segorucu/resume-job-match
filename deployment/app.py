@@ -1,5 +1,9 @@
 import streamlit as st
 from backend import backendcalculations
+import sqlite3
+
+st.write(f"SQLite version: {sqlite3.sqlite_version}")
+
 
 
 def main():
