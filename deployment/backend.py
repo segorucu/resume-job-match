@@ -10,6 +10,7 @@ from langchain_core.documents import Document
 from langgraph.graph import START, StateGraph
 from uuid import uuid4
 from opensearchpy import OpenSearch
+from helper import get_matching_jobs
 
 """
 retrival -> rank
@@ -43,21 +44,6 @@ def readpdf(resume_file):
 
     resume_clean = chat_response.choices[0].message.content
     return resume_clean
-
-
-def get_matching_jobs(index_name, location, position, es_client):
-    query = {
-        "query": {
-            "bool": {
-                "must": [
-                    {"match": {"location": location}},
-                    {"match": {"query": position}}
-                ]
-            }
-        }
-    }
-    results = es_client.search(index=index_name, body=query, size=1000)
-    return results['hits']['hits']
 
 
 def getthejobs(location, query):
@@ -137,7 +123,7 @@ def backendcalculations(resume_file, location, query, st):
     graph = graph_builder.compile()
 
     question = (f"Given the following resume: {resume_clean}, analyze which jobs match the resume better. Return the "
-                f"ids, company names, job titles and summaries of the 3 best matching jobs.")
+                f"company names, job titles and summaries of the 3 best matching jobs.")
 
     results = graph.invoke({"question": question})
 
