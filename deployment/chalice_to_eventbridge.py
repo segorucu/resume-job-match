@@ -28,13 +28,9 @@ def scrape_jobs(event):
     for city, value in locations.items():
         for jt in job_titles:
             position_df = scrape_google_jobs(jt, location=city, value=value)
-            print(position_df["query"].value_counts())
+            logging.info(f"Query counts for {city} - {jt}: {position_df['query'].value_counts()}")
             position_df = position_df.where(pd.notnull(position_df), None)
-            save_position_to_aws(position_df=position_df)
-
-
-            break
-        break
+            # save_position_to_aws(position_df=position_df)
 
     return {"status": "success"}
 
