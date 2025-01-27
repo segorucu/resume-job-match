@@ -19,15 +19,10 @@ def main():
         ("Toronto", "Vancouver"),
     )
 
-    if location == "Vancouver":
-        query = st.selectbox(
-            "Please select job position.",
-            ("Data Analyst", "Product Manager", "Digital Marketer"),
-        )
-    else:
-        query = st.selectbox(
-            "Please select job position.",
-            ("Data Analyst", "Data Scientist", "Product Manager", "Machine Learning Engineer"),
+    query = st.selectbox(
+        "Please select job position.",
+        ("Data Analyst", "Data Scientist", "Product Manager", "Digital Marketer", "Machine Learning Engineer",
+         "Software Developer"),
         )
 
     if resume_file:
