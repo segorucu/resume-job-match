@@ -8,6 +8,7 @@ APIFY_KEY = os.getenv("APIFY_KEY")
 apify_client = ApifyClient('APIFY_KEY')
 
 
+
 def scrape_google_jobs(job_title, location, value):
     position_df = pd.DataFrame()
 
