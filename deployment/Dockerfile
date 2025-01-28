@@ -19,7 +19,6 @@ COPY requirements.txt .
 COPY backend.py .
 COPY app.py .
 COPY helper.py .
-COPY chalice_to_eventbridge.py .
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
