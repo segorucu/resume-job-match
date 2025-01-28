@@ -10,7 +10,6 @@ from langchain_core.documents import Document
 from langgraph.graph import START, StateGraph
 from uuid import uuid4
 from opensearchpy import OpenSearch
-from helper import get_matching_jobs
 
 """
 retrival -> rank
@@ -45,7 +44,19 @@ def readpdf(resume_file):
     resume_clean = chat_response.choices[0].message.content
     return resume_clean
 
-
+def get_matching_jobs(index_name, location, position, client):
+    query = {
+        "query": {
+            "bool": {
+                "must": [
+                    {"match": {"location": location}},
+                    {"match": {"query": position}}
+                ]
+            }
+        }
+    }
+    results = client.search(index=index_name, body=query, size=1000)
+    return results['hits']['hits']
 def getthejobs(location, query):
     # es_client = Elasticsearch(
     #     ['https://localhost:9200'],

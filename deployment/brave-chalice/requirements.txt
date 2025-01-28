@@ -1,0 +1,5 @@
+pandas==2.2.3
+apify-client==1.8.1
+apify-shared==1.2.1
+opensearch-py==2.8.0
+
