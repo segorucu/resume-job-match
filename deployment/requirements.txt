@@ -1,4 +1,6 @@
 streamlit==1.41.1
+sendgrid==6.11
+python-dotenv==1.0.1
 PyPDF2==3.0.1
 openai==1.60.1
 langchain==0.3.13

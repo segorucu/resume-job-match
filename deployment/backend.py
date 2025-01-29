@@ -10,6 +10,10 @@ from langchain_core.documents import Document
 from langgraph.graph import START, StateGraph
 from uuid import uuid4
 from opensearchpy import OpenSearch
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+from dotenv import load_dotenv
+import streamlit as st
 
 """
 retrival -> rank
@@ -44,6 +48,7 @@ def readpdf(resume_file):
     resume_clean = chat_response.choices[0].message.content
     return resume_clean
 
+
 def get_matching_jobs(index_name, location, position, client):
     query = {
         "query": {
@@ -57,6 +62,8 @@ def get_matching_jobs(index_name, location, position, client):
     }
     results = client.search(index=index_name, body=query, size=1000)
     return results['hits']['hits']
+
+
 def getthejobs(location, query):
     # es_client = Elasticsearch(
     #     ['https://localhost:9200'],
@@ -78,12 +85,10 @@ def getthejobs(location, query):
         timeout=60
     )
 
-
-
     jobs = get_matching_jobs("emre_brave_project", location, query, aws_client)
     Documents = []
     for i, job in enumerate(jobs):
-        print(job["_source"]["query"],job['_source']['title'],job['_source']['companyName'])
+        print(job["_source"]["query"], job['_source']['title'], job['_source']['companyName'])
         text = f"job id: {i} Company name: {job['_source']['companyName']} Title: {job['_source']['title']} description: {job['_source']['description']}"
         document = Document(
             page_content=text,
@@ -94,8 +99,67 @@ def getthejobs(location, query):
 
     return Documents
 
+
+def send_email(results, emailaddress):
+    load_dotenv()
+
+    # Debugging: Print the email address and its type
+    print(f"Email Address: {emailaddress}, Type: {type(emailaddress)}")
+
+    # Ensure emailaddress is a valid string
+    if not isinstance(emailaddress, str) or not emailaddress:
+        print("Error: Invalid email address.")
+        return
+
+    # Debugging: Print the results["answer"] and its type
+    print(f"Results Answer: {results.get('answer')}, Type: {type(results.get('answer'))}")
+
+    # Ensure results["answer"] is a valid string
+    if not isinstance(results.get("answer"), str) or not results.get("answer"):
+        print("Error: Invalid message content.")
+        return
+
+    # Set email details
+    to_email = emailaddress
+    subject = "Your job recommendations"
+    message = results["answer"]
+
+    # Debugging: Print the email details
+    print(f"To Email: {to_email}")
+    print(f"Subject: {subject}")
+    print(f"Message: {message}")
+
+    # Construct the email
+    email = Mail(
+        from_email=emailaddress,  # Replace with your verified sender email
+        to_emails=to_email,
+        subject=subject,
+        plain_text_content=message
+    )
+
+    # Send the email using SendGrid
+    SENDGRID_APIKEY = os.getenv("SENDGRID_APIKEY")
+    if not SENDGRID_APIKEY:
+        print("Error: SendGrid API key is missing.")
+        return
+
+    print(f"SendGrid API Key: {SENDGRID_APIKEY}")
+
+    try:
+        sg = SendGridAPIClient(SENDGRID_APIKEY)
+        response = sg.send(email)
+        print("Email sent successfully!")
+        print(f"Response Status Code: {response.status_code}")
+        print(f"Response Body: {response.body}")
+        print(f"Response Headers: {response.headers}")
+    except Exception as e:
+        print(f"Failed to send email: {e}")
+        if hasattr(e, "body"):
+            print(f"Error Details: {e.body}")
+
+
 # Press the green button in the gutter to run the script.
-def backendcalculations(resume_file, location, query, st):
+def backendcalculations(resume_file, location, query, st, email):
     resume_clean = readpdf(resume_file)
     Documents = getthejobs(location, query)
 
@@ -138,5 +202,6 @@ def backendcalculations(resume_file, location, query, st):
 
     results = graph.invoke({"question": question})
 
+    send_email(results, email)
     st.write(results["answer"])
     vector_store.delete_collection()
