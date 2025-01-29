@@ -28,6 +28,33 @@ How It Works
 - A concise summary of each job is provided.
 - The results are also emailed to you for convenience.
 
+```plaintext
++----------------------+      +----------------------+
+|      Streamlit UI    | ---> |  Resume Upload API   |
++----------------------+      +----------------------+
+                                      |
+                                      v
+                           +-------------------------+
+                           |  Resume Parsing Engine |
+                           +-------------------------+
+                                      |
+                                      v
+                          +--------------------------+
+                          |  Matching Engine (RAG)  |
+                          +--------------------------+
+                                      |
+                                      v
+                    +----------------------------------+
+                    |   Job Listings from OpenSearch  |
+                    +----------------------------------+
+                                      |
+                                      v
+                        +-------------------------+
+                        |   Email Notification   |
+                        +-------------------------+
+
+'''markdown
+
 -----------------------------------
 
 Automation with Chalice AI
@@ -57,30 +84,7 @@ Get Started
 Try the app now and let AI simplify your job search!
 
 
-```plaintext
-+----------------------+      +----------------------+
-|      Streamlit UI    | ---> |  Resume Upload API   |
-+----------------------+      +----------------------+
-                                      |
-                                      v
-                           +-------------------------+
-                           |  Resume Parsing Engine |
-                           +-------------------------+
-                                      |
-                                      v
-                          +--------------------------+
-                          |  Matching Engine (RAG)  |
-                          +--------------------------+
-                                      |
-                                      v
-                    +----------------------------------+
-                    |   Job Listings from OpenSearch  |
-                    +----------------------------------+
-                                      |
-                                      v
-                        +-------------------------+
-                        |   Email Notification   |
-                        +-------------------------+
+
 
                     (Automated Data Pipeline)
 +-------------------------+    +-------------------------+
