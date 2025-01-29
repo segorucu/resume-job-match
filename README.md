@@ -64,7 +64,18 @@ The brave-chalice folder contains the implementation of Chalice AI, which automa
 2. Automated Job Fetching: EventBridge regularly pulls job postings using Apify.
 3. Data Storage: Retrieved jobs are stored in AWS OpenSearch for quick access.
 
+```plaintext
 
+                    (Automated Data Pipeline)
++-------------------------+    +-------------------------+
+|  AWS Chalice / Lambda   |--->|   Apify Web Scraper    |
++-------------------------+    +-------------------------+
+                                      |
+                                      v
+                            +--------------------+
+                            |  OpenSearch Index |
+                            +--------------------+
+```
 -----------------------------------
 
 Deployment on Render
@@ -84,17 +95,7 @@ Get Started
 Try the app now and let AI simplify your job search!
 
 
-```plaintext
 
-                    (Automated Data Pipeline)
-+-------------------------+    +-------------------------+
-|  AWS Chalice / Lambda   |--->|   Apify Web Scraper    |
-+-------------------------+    +-------------------------+
-                                      |
-                                      v
-                            +--------------------+
-                            |  OpenSearch Index |
-                            +--------------------+
 
 
 
