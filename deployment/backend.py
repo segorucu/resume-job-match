@@ -100,34 +100,40 @@ def getthejobs(location, query):
     return Documents
 
 
+import os
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+from dotenv import load_dotenv
+
 def send_email(results, emailaddress):
     load_dotenv()
 
     # Debugging: Print the email address and its type
-    print(f"Email Address: {emailaddress}, Type: {type(emailaddress)}")
+    print(f"Email Address: {emailaddress}, Type: {type(emailaddress)}", flush=True)
 
     # Ensure emailaddress is a valid string
     if not isinstance(emailaddress, str) or not emailaddress:
-        print("Error: Invalid email address.")
+        print("Error: Invalid email address.", flush=True)
         return
 
     # Debugging: Print the results["answer"] and its type
-    print(f"Results Answer: {results.get('answer')}, Type: {type(results.get('answer'))}")
+    answer = results.get("answer")
+    print(f"Results Answer: {answer}, Type: {type(answer)}", flush=True)
 
     # Ensure results["answer"] is a valid string
-    if not isinstance(results.get("answer"), str) or not results.get("answer"):
-        print("Error: Invalid message content.")
+    if not isinstance(answer, str) or not answer:
+        print("Error: Invalid message content.", flush=True)
         return
 
     # Set email details
     to_email = emailaddress
     subject = "Your job recommendations"
-    message = results["answer"]
+    message = answer
 
     # Debugging: Print the email details
-    print(f"To Email: {to_email}")
-    print(f"Subject: {subject}")
-    print(f"Message: {message}")
+    print(f"To Email: {to_email}", flush=True)
+    print(f"Subject: {subject}", flush=True)
+    print(f"Message: {message}", flush=True)
 
     # Construct the email
     email = Mail(
@@ -140,22 +146,23 @@ def send_email(results, emailaddress):
     # Send the email using SendGrid
     SENDGRID_APIKEY = os.getenv("SENDGRID_APIKEY")
     if not SENDGRID_APIKEY:
-        print("Error: SendGrid API key is missing.")
+        print("Error: SendGrid API key is missing.", flush=True)
         return
 
-    print(f"SendGrid API Key: {SENDGRID_APIKEY}")
+    print(f"Using SendGrid API Key: {SENDGRID_APIKEY[:4]}***", flush=True)  # Masking for security
 
     try:
         sg = SendGridAPIClient(SENDGRID_APIKEY)
         response = sg.send(email)
-        print("Email sent successfully!")
-        print(f"Response Status Code: {response.status_code}")
-        print(f"Response Body: {response.body}")
-        print(f"Response Headers: {response.headers}")
+        print("Email sent successfully!", flush=True)
+        print(f"Response Status Code: {response.status_code}", flush=True)
+        print(f"Response Body: {response.body}", flush=True)
+        print(f"Response Headers: {response.headers}", flush=True)
     except Exception as e:
-        print(f"Failed to send email: {e}")
+        print(f"Failed to send email: {e}", flush=True)
         if hasattr(e, "body"):
-            print(f"Error Details: {e.body}")
+            print(f"Error Details: {e.body}", flush=True)
+
 
 
 # Press the green button in the gutter to run the script.
