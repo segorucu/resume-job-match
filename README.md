@@ -14,6 +14,7 @@ How It Works
 1. User Input
 - Upload your resume (PDF format).
 - Specify your desired city and position.
+- Enter your e-mail address.
 
 2. Job Data Retrieval
 - The app fetches available job listings from an AWS OpenSearch index.
