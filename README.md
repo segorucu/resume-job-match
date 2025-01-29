@@ -1,25 +1,61 @@
-Welcome to the resume job match app. This app matches your resume with with a job. Please find the link below: 
+Resume Job Match App
 
-https://resume-job-match.onrender.com/
+Welcome to the Resume Job Match App! This application helps you find the best job opportunities by intelligently matching your resume with relevant job postings.
 
-The deployment folder includes a Streamlit app designed to simplify job matching. The app performs the following steps:
+Access the App Here: https://resume-job-match.onrender.com/
 
-1. User Input: Users upload their resume (PDF) and provide their desired city and position.
-2. Job Data Retrieval: Available positions are fetched from an AWS OpenSearch index.
-3. Matching Process:
+Overview
+This app streamlines the job search process by leveraging AI-powered resume matching. Simply upload your resume, specify your preferences, and receive tailored job recommendations.
 
-    Chroma: Creates a vector database to store job descriptions and resume data as embeddings.
+How It Works
 
-    LangChain: Builds a Retrieval-Augmented Generation (RAG) chain to match the resume against the available jobs.
+User Input
 
-4. Results: The app identifies the top 3 matching jobs, summarizes them, and displays the results in the Streamlit interface, and sends the them to your e-mail address as well.
+Upload your resume (PDF format).
 
-Further, Chalice AI streamlines data pulling. brave-chalice folder contains implementation of Chalice AI deployment.
+Specify your desired city and position.
 
-1. Chalice AI was deployed to create an eventbridge mechanism.
-2. Eventbridge pull the job data regularly by using apify. Then, the jobs are stored in AWS OpenSearch.
+Job Data Retrieval
 
-Deployment of the app on Render:
+The app fetches available job listings from an AWS OpenSearch index.
 
-1. The app is hosted on Render.
-2. Render pulls this Github repo. It uses the Dockerfile, requirement.txt as well as the other python files to deploy the app.
+Matching Process
+
+ChromaDB: Stores job descriptions and resume data as vector embeddings.
+
+LangChain: Implements a Retrieval-Augmented Generation (RAG) approach to identify the most relevant job listings.
+
+Results
+
+The app ranks and displays the top 3 job matches.
+
+A concise summary of each job is provided.
+
+The results are also emailed to you for convenience.
+
+Automation with Chalice AI
+The brave-chalice folder contains the implementation of Chalice AI, which automates job data retrieval:
+
+EventBridge Mechanism: Chalice AI is deployed to create an AWS EventBridge trigger.
+
+Automated Job Fetching: EventBridge regularly pulls job postings using Apify.
+
+Data Storage: Retrieved jobs are stored in AWS OpenSearch for quick access.
+
+Deployment on Render
+The app is deployed on Render with the following setup:
+
+Hosting: Render hosts and runs the application.
+
+Code Integration: Render pulls the latest version from this GitHub repository.
+
+Deployment Configuration: Render uses:
+
+Dockerfile (to containerize the application)
+
+requirements.txt (to install dependencies)
+
+Python scripts (to power the backend and job matching logic)
+
+Get Started
+Try the app now and let AI simplify your job search!
