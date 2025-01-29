@@ -92,6 +92,7 @@ The app is deployed on Render with the following setup:
 -----------------------------------
 
 Get Started
+
 Try the app now and let AI simplify your job search!
 
 
