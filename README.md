@@ -28,6 +28,30 @@ How It Works
 - A concise summary of each job is provided.
 - The results are also emailed to you for convenience.
 
++----------------------+      +----------------------+
+|      Streamlit UI    | ---> |  Resume Upload API   |
++----------------------+      +----------------------+
+                                      |
+                                      v
+                           +-------------------------+
+                           |  Resume Parsing Engine |
+                           +-------------------------+
+                                      |
+                                      v
+                          +--------------------------+
+                          |  Matching Engine (RAG)  |
+                          +--------------------------+
+                                      |
+                                      v
+                    +----------------------------------+
+                    |   Job Listings from OpenSearch  |
+                    +----------------------------------+
+                                      |
+                                      v
+                        +-------------------------+
+                        |   Email Notification   |
+                        +-------------------------+
+
 -----------------------------------
 
 Automation with Chalice AI
@@ -36,6 +60,16 @@ The brave-chalice folder contains the implementation of Chalice AI, which automa
 1. EventBridge Mechanism: Chalice AI is deployed to create an AWS EventBridge trigger.
 2. Automated Job Fetching: EventBridge regularly pulls job postings using Apify.
 3. Data Storage: Retrieved jobs are stored in AWS OpenSearch for quick access.
+
+                    (Automated Data Pipeline)
++-------------------------+    +-------------------------+
+|  AWS Chalice / Lambda   |--->|   Apify Web Scraper    |
++-------------------------+    +-------------------------+
+                                      |
+                                      v
+                            +--------------------+
+                            |  OpenSearch Index |
+                            +--------------------+
 
 -----------------------------------
 
@@ -49,8 +83,14 @@ The app is deployed on Render with the following setup:
    - requirements.txt (to install dependencies)
    - Python scripts (to power the backend and job matching logic)
 
+
 -----------------------------------
 
 Get Started
 Try the app now and let AI simplify your job search!
+
+
+
+
+
 
