@@ -28,30 +28,6 @@ How It Works
 - A concise summary of each job is provided.
 - The results are also emailed to you for convenience.
 
-+----------------------+      +----------------------+
-|      Streamlit UI    | ---> |  Resume Upload API   |
-+----------------------+      +----------------------+
-                                      |
-                                      v
-                           +-------------------------+
-                           |  Resume Parsing Engine |
-                           +-------------------------+
-                                      |
-                                      v
-                          +--------------------------+
-                          |  Matching Engine (RAG)  |
-                          +--------------------------+
-                                      |
-                                      v
-                    +----------------------------------+
-                    |   Job Listings from OpenSearch  |
-                    +----------------------------------+
-                                      |
-                                      v
-                        +-------------------------+
-                        |   Email Notification   |
-                        +-------------------------+
-
 -----------------------------------
 
 Automation with Chalice AI
@@ -61,15 +37,6 @@ The brave-chalice folder contains the implementation of Chalice AI, which automa
 2. Automated Job Fetching: EventBridge regularly pulls job postings using Apify.
 3. Data Storage: Retrieved jobs are stored in AWS OpenSearch for quick access.
 
-                    (Automated Data Pipeline)
-+-------------------------+    +-------------------------+
-|  AWS Chalice / Lambda   |--->|   Apify Web Scraper    |
-+-------------------------+    +-------------------------+
-                                      |
-                                      v
-                            +--------------------+
-                            |  OpenSearch Index |
-                            +--------------------+
 
 -----------------------------------
 
