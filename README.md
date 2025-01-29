@@ -53,8 +53,7 @@ How It Works
                         |   Email Notification   |
                         +-------------------------+
 
-```plaintext
-```markdown
+```
 
 -----------------------------------
 
