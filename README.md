@@ -84,7 +84,7 @@ Get Started
 Try the app now and let AI simplify your job search!
 
 
-
+```plaintext
 
                     (Automated Data Pipeline)
 +-------------------------+    +-------------------------+
