@@ -13,8 +13,8 @@ def scrape_google_jobs(job_title, location, value):
         "includeUnfilteredResults": False,
         "maxConcurrency": 10,
         "maxPagesPerQuery": 3,
-        "queries": f"https://www.google.com/search?ibp=htl;jobs&q={job_title}&uule={value}&date_posted=today",
-        #"queries": f"https://www.google.com/search?ibp=htl;jobs&q={job_title}&uule={value}&date_posted=7days",
+        # "queries": f"https://www.google.com/search?ibp=htl;jobs&q={job_title}&uule={value}&date_posted=today",
+        "queries": f"https://www.google.com/search?ibp=htl;jobs&q={job_title}&uule={value}&date_posted=7",
         "saveHtml": False,
         "saveHtmlToKeyValueStore": False,
     }

@@ -45,7 +45,7 @@ def trigger_scrape_jobs():
     return {"status": "success"}
 
 #@app.schedule('cron(59 23 ? * 1 *)') once in a week at 23:59 utc time
-@app.schedule('cron(41 5 * * ? *)') # EventBridge schedule
+@app.schedule('cron(41 5 ? * 7 *)') # EventBridge schedule
 def scrape_jobs(event):
     logger.info("scrape_jobs")
     job_titles = ["Data Analyst", "Data Engineer", "Data Scientist", "Software Developer",

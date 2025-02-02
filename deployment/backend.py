@@ -13,7 +13,6 @@ from opensearchpy import OpenSearch
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from dotenv import load_dotenv
-import streamlit as st
 
 """
 retrival -> rank
@@ -99,11 +98,6 @@ def getthejobs(location, query):
 
     return Documents
 
-
-import os
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
-from dotenv import load_dotenv
 
 def send_email(results, emailaddress):
     load_dotenv()
@@ -205,7 +199,7 @@ def backendcalculations(resume_file, location, query, st, email):
     graph = graph_builder.compile()
 
     question = (f"Given the following resume: {resume_clean}, analyze which jobs match the resume better. Return the "
-                f"company names, job titles and summaries of the 3 best matching jobs.")
+                f"company names, job titles and summaries of the 3 best matching jobs. Please do not return the resume itself as a job position. The job position needs to be within the vectorized job list.")
 
     results = graph.invoke({"question": question})
 
