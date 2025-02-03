@@ -99,7 +99,7 @@ def getthejobs(location, query):
     return Documents
 
 
-def send_email(results, emailaddress):
+def send_email(results, emailaddress, location, query):
     load_dotenv()
 
     # Debugging: Print the email address and its type
@@ -121,7 +121,7 @@ def send_email(results, emailaddress):
 
     # Set email details
     to_email = emailaddress
-    subject = "Your job recommendations"
+    subject = f"Your job recommendations for {location} - {query} position"
     message = answer
 
     # Debugging: Print the email details
@@ -203,6 +203,6 @@ def backendcalculations(resume_file, location, query, st, email):
 
     results = graph.invoke({"question": question})
 
-    send_email(results, email)
+    send_email(results, email, location, query)
     st.write(results["answer"])
     vector_store.delete_collection()
