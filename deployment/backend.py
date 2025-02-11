@@ -131,7 +131,7 @@ def send_email(results, emailaddress, location, query):
 
     # Construct the email
     email = Mail(
-        from_email=emailaddress,  # Replace with your verified sender email
+        from_email="segorucu@gmail.com",  # Replace with your verified sender email
         to_emails=to_email,
         subject=subject,
         plain_text_content=message
