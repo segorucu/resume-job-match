@@ -95,6 +95,8 @@ def getthejobs(location, query):
             id=i,
         )
         Documents.append(document)
+        if len(Documents) > 100:
+            break
 
     return Documents
 
