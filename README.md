@@ -2,7 +2,7 @@ Resume Job Match App
 
 Welcome to the Resume Job Match App! This application helps you find the best job opportunities by intelligently matching your resume with relevant job postings.
 
-Access the App Here: https://resume-job-match.onrender.com/
+Access the App Here: https://resume-job-match.onrender.com/ It takes two minutes to cold-start the app :(
 
 -----------------------------------
 
